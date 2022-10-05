@@ -84,21 +84,21 @@ public class PrincipalViewController implements Initializable {
     
 
     
-    ArrayList<String> experienceAvailablearray = new ArrayList();
+    private ArrayList<String> experienceAvailablearray = new ArrayList();
     
-    ArrayList<String> typeCArray = new ArrayList();
+    private ArrayList<String> typeCArray = new ArrayList();
     
-    ArrayList<SuperCombatiente> habilitySuper = new ArrayList();
+    private ArrayList<SuperCombatiente> habilitySuper = new ArrayList();
 
     
-    Player player1 = new Player("JUGADOR 1",100, 10);  
-    Player player2 = new Player("JUGADOR 2",100, 10);
+    private Player player1 = new Player("JUGADOR 1",100, 10);  
+    private Player player2 = new Player("JUGADOR 2",100, 10);
 
-    int flagTurn = 1;
+    private int flagTurn = 1;
     
     
-    Combatientes combatiente1selected;
-    Combatientes combatiente2selected;
+    private Combatientes combatiente1selected;
+    private Combatientes combatiente2selected;
     
     @Override
     
