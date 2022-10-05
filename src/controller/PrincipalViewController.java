@@ -119,7 +119,25 @@ public class PrincipalViewController implements Initializable {
         
     }    
     
-  
+    public void setSuperHability(Combatientes combatiente){
+        habilitySuper.clear();
+        cmbHability1.setValue("");        
+        cmbHability2.setValue("");
+        if(combatiente.getTypeCombatiente().equals("ATACANTE")){
+            habilitySuper.add(new SuperCombatiente("ATAQUE MORTAL POR ATACANTE SUPREMO",10, combatiente.getName(),combatiente.getDamage(), combatiente.getTypeCombatiente(),combatiente.getExperienceCombatiente()));
+        }else{
+            habilitySuper.add(new SuperCombatiente("CURACIÓN INSTANTANEA",100, combatiente.getName(),combatiente.getDamage(), combatiente.getTypeCombatiente(),combatiente.getExperienceCombatiente()));
+        }
+        ArrayList<String>comboHability = new ArrayList();
+        for(SuperCombatiente combat:habilitySuper){
+            comboHability.add(combat.getHabilityExtra());
+        }
+        ObservableList<String>habilitiesObservable;
+        habilitiesObservable = FXCollections.observableList(comboHability);
+        cmbHability1.setItems(habilitiesObservable);
+        cmbHability2.setItems(habilitiesObservable);
+    }
+    
     
     
       @FXML
