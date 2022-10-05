@@ -100,8 +100,12 @@ public class PrincipalViewController implements Initializable {
     private Combatientes combatiente1selected;
     private Combatientes combatiente2selected;
     
+    /**
+     * inicia la view y ejecuta initizalize
+     * @param url
+     * @param rb 
+     */
     @Override
-    
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         barPlayer1.setProgress(player1.getLife());
@@ -119,6 +123,11 @@ public class PrincipalViewController implements Initializable {
         
     }    
     
+    
+    /**
+     * setea una super habilidad al combatiente 
+     * @param combatiente 
+     */
     public void setSuperHability(Combatientes combatiente){
         habilitySuper.clear();
         cmbHability1.setValue("");        
@@ -139,9 +148,12 @@ public class PrincipalViewController implements Initializable {
     }
     
     
-    
+    /**
+     * selecciona el combatiente del jugador1
+     * @param event 
+     */
       @FXML
-    private void clickCombatiente1(MouseEvent event) {
+    public void clickCombatiente1(MouseEvent event) {
         try{
             combatiente1selected = tablePlayer1.getSelectionModel().getSelectedItem();
             Random random = new Random();
@@ -162,9 +174,13 @@ public class PrincipalViewController implements Initializable {
         
         }
     }
-
+    
+    /**
+     * selecciona el combatiente del jugador 2
+     * @param event 
+     */
     @FXML
-    private void clickCombatiente2(MouseEvent event) {
+    public void clickCombatiente2(MouseEvent event) {
          try{
             combatiente2selected = tablePlayer2.getSelectionModel().getSelectedItem();
             Random random = new Random();
@@ -184,7 +200,9 @@ public class PrincipalViewController implements Initializable {
         }
     }
     
-    
+    /**
+     * carga la data de combatientes para jugador 1 
+     */
     public void uploadDataCombatientes1(){
         ObservableList<Combatientes> combatientesPlayer1;
         combatientesPlayer1 = FXCollections.observableList(player1.getCombatientes());
@@ -195,7 +213,9 @@ public class PrincipalViewController implements Initializable {
         type1Column.setCellValueFactory(new PropertyValueFactory("typeCombatiente"));
     }
     
-     
+     /**
+      * carga la data de combatientes para jugador 2
+      */
     public void uploadDataCombatientes2(){
         ObservableList<Combatientes> combatientesPlayer2;
         combatientesPlayer2 = FXCollections.observableList(player2.getCombatientes());
@@ -206,23 +226,31 @@ public class PrincipalViewController implements Initializable {
         type2Column.setCellValueFactory(new PropertyValueFactory("typeCombatiente"));
     }
     
-    
-    private void setExperienceArray(){
+    /**
+     * guarda los valores de experiencia
+     */
+    public void setExperienceArray(){
         experienceAvailablearray.add("JEFE");
         experienceAvailablearray.add("SOLDADO");
     }
     
-    private void setTypeCArray(){
+    /**
+     * guarda los tipos de combatientes
+     */
+    public void setTypeCArray(){
         typeCArray.add("CURANDERO");
         typeCArray.add("ATACANTE");
     }
 
     
     
-    
+    /**
+     * ataca al jugador 2
+     * @param event 
+     */
     
     @FXML
-    private void atackPlayer1(ActionEvent event) {
+    public void atackPlayer1(ActionEvent event) {
         try{
             if(combatiente1selected==null){
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -279,9 +307,14 @@ public class PrincipalViewController implements Initializable {
         
         
     }
+    
+    /**
+     * ataca al jugador 1
+     * @param event 
+     */
 
     @FXML
-    private void atackPlayer2(ActionEvent event) {
+    public void atackPlayer2(ActionEvent event) {
           try{
             
             
@@ -340,12 +373,20 @@ public class PrincipalViewController implements Initializable {
 
     }
 
+    
+    /**
+     * se compra un nuevo combatiente para jugador 1
+     * @param event 
+     */
     @FXML
-    private void buyPlayer1(ActionEvent event) {
+    public void buyPlayer1(ActionEvent event) {
        BuyPlayer();
     }
     
     
+    /**
+     * método para evaluar que combatiente se va a comprar y a quien le corresponde
+     */
     public void BuyPlayer(){
          Dialog<Combatientes> dialog = new Dialog<>();
         dialog.setTitle("Comprar Jugador");
@@ -419,6 +460,10 @@ public class PrincipalViewController implements Initializable {
         
     }
     
+    
+    /**
+     * cambio de turno
+     */
     public void changeTurn(){
         if(flagTurn==1){
             flagTurn=2;
@@ -437,8 +482,13 @@ public class PrincipalViewController implements Initializable {
         }
     }
 
+    
+    /**
+     * compra un combatiente el jugador 2
+     * @param event 
+     */
     @FXML
-    private void buyPlayer2(ActionEvent event) {
+    public void buyPlayer2(ActionEvent event) {
         BuyPlayer();
     }
 
