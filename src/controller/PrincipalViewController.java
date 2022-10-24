@@ -230,8 +230,10 @@ public class PrincipalViewController implements Initializable {
      * guarda los valores de experiencia
      */
     public void setExperienceArray(){
+        experienceAvailablearray.add("RAID BOSS");
         experienceAvailablearray.add("JEFE");
         experienceAvailablearray.add("SOLDADO");
+        experienceAvailablearray.add("CAZADOR");
     }
     
     /**
