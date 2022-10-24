@@ -5,13 +5,14 @@
  */
 package models;
 
+import interfaces.partnersCombatientes;
 import java.util.ArrayList;
 
 /**
  *
  * @author Davis
  */
-public class Combatientes {
+public class Combatientes implements partnersCombatientes {
     private String Name;
     private double damage;
         private String typeCombatiente;
@@ -93,6 +94,11 @@ public class Combatientes {
      */
     public void setTypeCombatiente(String typeCombatiente) {
         this.typeCombatiente = typeCombatiente;
+    }
+
+    @Override
+    public double damageMethod() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
  
