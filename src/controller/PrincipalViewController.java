@@ -99,6 +99,18 @@ public class PrincipalViewController implements Initializable {
     
     private Combatientes combatiente1selected;
     private Combatientes combatiente2selected;
+    @FXML
+    private TableView<?> tablePartner1;
+    @FXML
+    private TableColumn<?, ?> partnerNameColumn1;
+    @FXML
+    private TableColumn<?, ?> partnerDamageColumn1;
+    @FXML
+    private Button addPartner1;
+    @FXML
+    private Button addPartner2;
+    @FXML
+    private TableView<?> tablePartner2;
     
     /**
      * inicia la view y ejecuta initizalize
@@ -132,11 +144,22 @@ public class PrincipalViewController implements Initializable {
         habilitySuper.clear();
         cmbHability1.setValue("");        
         cmbHability2.setValue("");
-        if(combatiente.getTypeCombatiente().equals("ATACANTE")){
-            habilitySuper.add(new SuperCombatiente("ATAQUE MORTAL POR ATACANTE SUPREMO",10, combatiente.getName(),combatiente.getDamage(), combatiente.getTypeCombatiente(),combatiente.getExperienceCombatiente()));
+        if(combatiente.getExperienceCombatiente().equals("RAID BOSS")){
+            if(combatiente.getTypeCombatiente().equals("ATACANTE")){
+                habilitySuper.add(new SuperCombatiente("CLONAR",20, combatiente.getName(),combatiente.getDamage(), combatiente.getTypeCombatiente(),combatiente.getExperienceCombatiente()));
+                habilitySuper.add(new SuperCombatiente("VARIAR",0, combatiente.getName(),combatiente.getDamage(), combatiente.getTypeCombatiente(),combatiente.getExperienceCombatiente()));
+                habilitySuper.add(new SuperCombatiente("LIBERAR",0, combatiente.getName(),combatiente.getDamage(), combatiente.getTypeCombatiente(),combatiente.getExperienceCombatiente()));
+            }else if(combatiente.getTypeCombatiente().equals("CURANDERO")){
+                habilitySuper.add(new SuperCombatiente("CURACIÓN INSTANTANEA",100, combatiente.getName(),combatiente.getDamage(), combatiente.getTypeCombatiente(),combatiente.getExperienceCombatiente()));
+            }
         }else{
-            habilitySuper.add(new SuperCombatiente("CURACIÓN INSTANTANEA",100, combatiente.getName(),combatiente.getDamage(), combatiente.getTypeCombatiente(),combatiente.getExperienceCombatiente()));
+            if(combatiente.getTypeCombatiente().equals("ATACANTE")){
+                habilitySuper.add(new SuperCombatiente("ATAQUE MORTAL POR ATACANTE SUPREMO",10, combatiente.getName(),combatiente.getDamage(), combatiente.getTypeCombatiente(),combatiente.getExperienceCombatiente()));
+            }else if(combatiente.getTypeCombatiente().equals("CURANDERO")){
+                habilitySuper.add(new SuperCombatiente("CURACIÓN INSTANTANEA",100, combatiente.getName(),combatiente.getDamage(), combatiente.getTypeCombatiente(),combatiente.getExperienceCombatiente()));
+            }
         }
+        
         ArrayList<String>comboHability = new ArrayList();
         for(SuperCombatiente combat:habilitySuper){
             comboHability.add(combat.getHabilityExtra());
@@ -417,8 +440,10 @@ public class PrincipalViewController implements Initializable {
                 
                 if(comboBox.getValue().equals("JEFE")){
                     damage = damage+7;
-                }else{
+                }else if(comboBox.getValue().equals("CURANDERO")){
                     damage = damage-5;
+                }else{
+                    damage = damage+20;
                 }
                 
                 return new Combatientes(textField.getText(),damage,comboBox2.getValue(), comboBox.getValue());
@@ -431,9 +456,12 @@ public class PrincipalViewController implements Initializable {
         
         if(optionalResult.get().getExperienceCombatiente().equals("JEFE")){
             coin = coin+2;
+        }else if(optionalResult.get().getExperienceCombatiente().equals("RAID BOSS")){
+            coin = coin+3;
         }
+        
         if(flagTurn==1){
-            if(player1.getCoins()-coin>0){
+            if(player1.getCoins()-coin>=0){
                 player1.setCoins(player1.getCoins()-coin);
                 player1.setCombatientes(optionalResult.get());
                 txtCoinPlayer1.setText(String.valueOf(player1.getCoins()));
@@ -446,7 +474,7 @@ public class PrincipalViewController implements Initializable {
                 alert.show();
             }
         }else{
-            if(player2.getCoins()-coin>0){
+            if(player2.getCoins()-coin>=0){
                 player2.setCoins(player2.getCoins()-coin);
                 txtCoinPlayer2.setText(String.valueOf(player2.getCoins()));
                 player2.setCombatientes(optionalResult.get());

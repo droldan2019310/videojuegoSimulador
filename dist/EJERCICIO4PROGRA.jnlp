@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="EJERCICIO4PROGRA.jar" size="11378" download="eager" />
+    <jar href="EJERCICIO4PROGRA.jar" size="11765" download="eager" />
   </resources>
   <jfx:javafx-desc  width="800" height="600" main-class="ejercicio4progra.EJERCICIO4PROGRA"  name="EJERCICIO4PROGRA" />
   <update check="always"/>
