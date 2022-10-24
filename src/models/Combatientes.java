@@ -15,8 +15,10 @@ import java.util.ArrayList;
 public class Combatientes implements partnersCombatientes {
     private String Name;
     private double damage;
-        private String typeCombatiente;
+    private String typeCombatiente;
     private String ExperienceCombatiente;
+    
+    private ArrayList<Partner> partners = new ArrayList();
     
 /**
  * constructor de combatientes
@@ -96,6 +98,27 @@ public class Combatientes implements partnersCombatientes {
         this.typeCombatiente = typeCombatiente;
     }
 
+    /**
+     * obtiene los acompañantes
+     * @return partners
+     */
+    
+    public ArrayList<Partner> getPartners() {
+        return partners;
+    }
+
+    
+    /**
+     * guarda el nuevo acompañante asociado a este combatiente
+     * @param partners 
+     */
+    public void setPartners(Partner partners) {
+        this.partners.add(partners);
+    }
+
+    
+    
+    
     @Override
     public double damageMethod() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

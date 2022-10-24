@@ -33,6 +33,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import models.Combatientes;
+import models.Partner;
 import models.Player;
 import models.SuperCombatiente;
 
@@ -42,7 +43,6 @@ import models.SuperCombatiente;
  */
 public class PrincipalViewController implements Initializable {
     
-    private Label label;
     @FXML
     private ProgressBar barPlayer1;
     @FXML
@@ -100,17 +100,23 @@ public class PrincipalViewController implements Initializable {
     private Combatientes combatiente1selected;
     private Combatientes combatiente2selected;
     @FXML
-    private TableView<?> tablePartner1;
+    private TableView<Partner> tablePartner1;
     @FXML
-    private TableColumn<?, ?> partnerNameColumn1;
+    private TableColumn<Partner, String> partnerNameColumn1;
     @FXML
-    private TableColumn<?, ?> partnerDamageColumn1;
+    private TableColumn<Partner, Double> partnerDamageColumn1;
+
     @FXML
-    private Button addPartner1;
+    private TableView<Partner> tablePartner2;
     @FXML
-    private Button addPartner2;
+    private TableColumn<Partner, String> partnerNameColumn2;
     @FXML
-    private TableView<?> tablePartner2;
+    private TableColumn<Partner, Double> partnerDamageColumn2;
+    @FXML
+    private Button addPartner1button;
+    @FXML
+    private Button addPartner2Button;
+
     
     /**
      * inicia la view y ejecuta initizalize
@@ -152,14 +158,16 @@ public class PrincipalViewController implements Initializable {
             }else if(combatiente.getTypeCombatiente().equals("CURANDERO")){
                 habilitySuper.add(new SuperCombatiente("CURACIÓN INSTANTANEA",100, combatiente.getName(),combatiente.getDamage(), combatiente.getTypeCombatiente(),combatiente.getExperienceCombatiente()));
             }
+            habilitySuper.add(new SuperCombatiente("SOLTAR MASCOTA",2, combatiente.getName(),combatiente.getDamage(), combatiente.getTypeCombatiente(),combatiente.getExperienceCombatiente()));
+
         }else{
             if(combatiente.getTypeCombatiente().equals("ATACANTE")){
                 habilitySuper.add(new SuperCombatiente("ATAQUE MORTAL POR ATACANTE SUPREMO",10, combatiente.getName(),combatiente.getDamage(), combatiente.getTypeCombatiente(),combatiente.getExperienceCombatiente()));
             }else if(combatiente.getTypeCombatiente().equals("CURANDERO")){
                 habilitySuper.add(new SuperCombatiente("CURACIÓN INSTANTANEA",100, combatiente.getName(),combatiente.getDamage(), combatiente.getTypeCombatiente(),combatiente.getExperienceCombatiente()));
             }
+            habilitySuper.add(new SuperCombatiente("SOLTAR MASCOTA",1, combatiente.getName(),combatiente.getDamage(), combatiente.getTypeCombatiente(),combatiente.getExperienceCombatiente()));
         }
-        
         ArrayList<String>comboHability = new ArrayList();
         for(SuperCombatiente combat:habilitySuper){
             comboHability.add(combat.getHabilityExtra());
@@ -170,6 +178,22 @@ public class PrincipalViewController implements Initializable {
         cmbHability2.setItems(habilitiesObservable);
     }
     
+    
+    
+    public void clonar(){
+    
+        if(flagTurn==1){
+            if(combatiente2selected != null){
+                player1.setCombatientes(combatiente2selected);
+                uploadDataCombatientes1();
+            }
+        }else{
+            if(combatiente1selected != null){
+                player2.setCombatientes(combatiente1selected);
+                uploadDataCombatientes1();
+            }
+        }
+    }
     
     /**
      * selecciona el combatiente del jugador1
@@ -191,7 +215,7 @@ public class PrincipalViewController implements Initializable {
                 cmbHability1.setValue("");        
                 cmbHability2.setValue("");
             }
-            
+            uploadDataPartner1();
             
         }catch(Exception e){
         
@@ -211,12 +235,13 @@ public class PrincipalViewController implements Initializable {
             if(x==1){
                 cmbHability2.setDisable(false);
                 setSuperHability(combatiente2selected);
+                
             }else{
                 cmbHability2.setDisable(true);
                 cmbHability1.setValue("");        
                 cmbHability2.setValue("");
             }
-            
+            uploadDataPartner2();
             
         }catch(Exception e){
         
@@ -236,6 +261,10 @@ public class PrincipalViewController implements Initializable {
         type1Column.setCellValueFactory(new PropertyValueFactory("typeCombatiente"));
     }
     
+    
+   
+    
+    
      /**
       * carga la data de combatientes para jugador 2
       */
@@ -247,6 +276,32 @@ public class PrincipalViewController implements Initializable {
         atacker2Column.setCellValueFactory(new PropertyValueFactory("name"));
         damage2Column.setCellValueFactory(new PropertyValueFactory("damage"));
         type2Column.setCellValueFactory(new PropertyValueFactory("typeCombatiente"));
+    }
+    
+    
+    
+    /**
+     * carga la data de acompañantes para jugador 1
+     */
+    public void uploadDataPartner1(){
+        ObservableList<Partner> partnersPlayer1;
+        partnersPlayer1 = FXCollections.observableList(combatiente1selected.getPartners());
+        //configura la table de programas en ejecución
+        tablePartner1.setItems(partnersPlayer1);
+        partnerNameColumn1.setCellValueFactory(new PropertyValueFactory("name"));
+        partnerDamageColumn1.setCellValueFactory(new PropertyValueFactory("damage"));
+    }
+    
+    /**
+     * carga la data de acompañantes para jugador 2
+     */
+    public void uploadDataPartner2(){
+        ObservableList<Partner> partnersPlayer2;
+        partnersPlayer2 = FXCollections.observableList(combatiente2selected.getPartners());
+        //configura la table de programas en ejecución
+        tablePartner2.setItems(partnersPlayer2);
+        partnerNameColumn2.setCellValueFactory(new PropertyValueFactory("name"));
+        partnerDamageColumn2.setCellValueFactory(new PropertyValueFactory("damage"));
     }
     
     /**
@@ -290,6 +345,18 @@ public class PrincipalViewController implements Initializable {
                         damage = damage+10;
                         cmbHability1.getSelectionModel().clearSelection();
                         cmbHability1.setValue(null);
+                    }else if(cmbHability1.getValue().equals("SOLTAR MASCOTA")){
+                        if(combatiente1selected.getExperienceCombatiente().equals("RAID BOSS")){
+                            damage = damage+5;
+                        }else{
+                            damage = damage+10;
+                        }
+                        
+                        cmbHability1.getSelectionModel().clearSelection();
+                        cmbHability1.setValue(null);
+                    
+                    }else if(cmbHability1.getValue().equals("CLONAR")){
+                        clonar();
                     }
                     if(player2.getLife()-damage<=0){
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -297,7 +364,7 @@ public class PrincipalViewController implements Initializable {
                         alert.setHeaderText("FELICIDADES JUGADOR 1");
                         alert.show();
                     }
-                    player2.setLife(player2.getLife()-combatiente1selected.getDamage());
+                    player2.setLife(player2.getLife()-damage);
                     System.out.println(player2.getLife());
                     double lifeTotal = player2.getLife()/100;
                     barPlayer2.setProgress(lifeTotal);
@@ -309,13 +376,15 @@ public class PrincipalViewController implements Initializable {
                         damage = damage+100;
                         cmbHability1.getSelectionModel().clearSelection();
                         cmbHability1.setValue(null);
+                    }else if(cmbHability1.getValue().equals("CLONAR")){
+                        clonar();
                     }
                     if(player1.getLife()+damage>=100){
                         player1.setLife(100);
                         double lifeTotal = player1.getLife()/100;
                         barPlayer1.setProgress(lifeTotal);
                     }else{
-                        player1.setLife(player1.getLife()+combatiente1selected.getDamage());
+                        player1.setLife(player1.getLife()+damage);
                         double lifeTotal = player1.getLife()/100;
                         barPlayer1.setProgress(lifeTotal);
                     }
@@ -357,7 +426,20 @@ public class PrincipalViewController implements Initializable {
                         damage = damage+10;
                         cmbHability2.getSelectionModel().clearSelection();
                         cmbHability2.setValue(null);
+                    }else if(cmbHability2.getValue().equals("SOLTAR MASCOTA")){
+                        if(combatiente2selected.getExperienceCombatiente().equals("RAID BOSS")){
+                            damage = damage+5;
+                        }else{
+                            damage = damage+10;
+                        }
+                        
+                        cmbHability2.getSelectionModel().clearSelection();
+                        cmbHability2.setValue(null);
+                    
+                    }else if(cmbHability2.getValue().equals("CLONAR")){
+                        clonar();
                     }
+
                     if(player1.getLife()-damage<=0){
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setTitle("EL JUGADOR 2 HA GANADO");
@@ -376,6 +458,8 @@ public class PrincipalViewController implements Initializable {
                         damage = damage+100;
                         cmbHability2.getSelectionModel().clearSelection();
                         cmbHability2.setValue(null);
+                    }else if(cmbHability2.getValue().equals("CLONAR")){
+                        clonar();
                     }
                     if(player2.getLife()+damage>=100){
                         player2.setLife(100);
@@ -413,7 +497,7 @@ public class PrincipalViewController implements Initializable {
      * método para evaluar que combatiente se va a comprar y a quien le corresponde
      */
     public void BuyPlayer(){
-         Dialog<Combatientes> dialog = new Dialog<>();
+        Dialog<Combatientes> dialog = new Dialog<>();
         dialog.setTitle("Comprar Jugador");
         dialog.setHeaderText("");
         DialogPane dialogPane = dialog.getDialogPane();
@@ -500,15 +584,21 @@ public class PrincipalViewController implements Initializable {
             jugadorActualtxt.setText(player2.getName());
             buttonAtack1.setDisable(true);
             btnBuyPlayer1.setDisable(true);
+            addPartner1button.setDisable(true);
             buttonAtack2.setDisable(false);
             btnbuyPlayer2.setDisable(false);
+            addPartner2Button.setDisable(false);
+            
         }else{
             flagTurn=1;
             jugadorActualtxt.setText(player1.getName());
             buttonAtack1.setDisable(false);
             btnBuyPlayer1.setDisable(false);
+            addPartner1button.setDisable(false);
             buttonAtack2.setDisable(true);
             btnbuyPlayer2.setDisable(true);
+            addPartner2Button.setDisable(true);
+
         }
     }
 
@@ -522,5 +612,143 @@ public class PrincipalViewController implements Initializable {
         BuyPlayer();
     }
 
+    
+    /**
+     * comprar acompañante 1
+     * @param event 
+     */
+    @FXML
+    private void addPartner1(ActionEvent event) {
+        
+        buyPartner();
+    }
+    
+    /**
+     * comprar acompañante 2
+     * @param event 
+     */
+
+    @FXML
+    private void addPartner2(ActionEvent event) {
+        buyPartner();
+    }
+    
+    
+
+    /**
+     * seleccionar el acompañante 1
+     * @param event 
+     */
+    @FXML
+    private void clickPartner1(MouseEvent event) {
+    }
+
+    
+    /**
+     * seleccionar el acompañante 2
+     * @param event 
+     */
+    @FXML
+    private void clickPartner2(MouseEvent event) {
+    }
+
+    
+    
+    public void buyPartner(){
+        
+        boolean flag=false;
+        
+        if(flagTurn==1){
+            if(combatiente1selected!=null){
+                flag=true;
+            }
+        }else{
+            if(combatiente2selected!=null){
+                flag=true;
+            }
+        }
+        
+        
+        if(flag){
+             Dialog<Partner> dialog = new Dialog<>();
+            dialog.setTitle("Comprar Acompañante");
+            dialog.setHeaderText("");
+            DialogPane dialogPane = dialog.getDialogPane();
+            dialogPane.getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+            Label label1 = new Label("NOMBRE DEL ACOMPAÑANTE:");
+            TextField textField = new TextField("");
+            textField.setPromptText("INGRESA EL NOMBRE");
+
+
+
+            Label label = new Label("EL DAÑO del acompañante es siempre 5 si es RAID BOSS es 10");
+
+
+            dialogPane.setContent(new VBox(8,label1, textField,label));
+            Platform.runLater(textField::requestFocus);
+            dialog.setResultConverter((ButtonType button) -> {
+                if (button == ButtonType.OK) {
+                    double damage = 5;
+
+                    if(flagTurn==1){
+                        if(combatiente1selected.getExperienceCombatiente().equals("RAID BOSS")){
+                            damage=damage+5;
+                        }
+                    }else{
+                        if(combatiente2selected.getExperienceCombatiente().equals("RAID BOSS")){
+                            damage=damage+5;
+                        }
+                    }
+                    return new Partner(textField.getText(),damage);
+                }
+                return null;
+            });
+            Optional<Partner> optionalResult = dialog.showAndWait();
+
+            int coin = 1;
+
+
+
+            if(flagTurn==1){
+                if(player1.getCoins()-coin>=0){
+                    player1.setCoins(player1.getCoins()-coin);
+                    combatiente1selected.setPartners(optionalResult.get());
+                    txtCoinPlayer1.setText(String.valueOf(player1.getCoins()));
+                    changeTurn();
+                    uploadDataPartner1();
+                }else{
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("ACCIÓN FALTANTE");
+                    alert.setHeaderText("NO TIENES SUFICIENTES MONEDAS");
+                    alert.show();
+                }
+            }else{
+                if(player2.getCoins()-coin>=0){
+                    player2.setCoins(player2.getCoins()-coin);
+                    txtCoinPlayer2.setText(String.valueOf(player2.getCoins()));
+                    combatiente2selected.setPartners(optionalResult.get());
+                    changeTurn();
+                    uploadDataCombatientes2();
+                }else{
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("ACCIÓN FALTANTE");
+                    alert.setHeaderText("NO TIENES SUFICIENTES MONEDAS");
+                    alert.show();
+                }
+            }
+        
+        
+        }else{
+        
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("ACCIÓN FALTANTE");
+            alert.setHeaderText("DEBES SELECCIONAR UN COMBATIENTE");
+            alert.show();
+
+        }
+       
+            
+        
+    }
   
 }
